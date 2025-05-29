@@ -20,8 +20,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8085:8080"
-    volumes:
-      - .:/app
     depends_on:
       - db
 

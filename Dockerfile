@@ -18,8 +18,6 @@ WORKDIR /app
 
 COPY --from=build /app/inventory .
 
-COPY --from=build /app/templates ./templates
-
 COPY --from=build /app/assets ./assets
 
 EXPOSE 8085
