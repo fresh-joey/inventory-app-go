@@ -4,20 +4,24 @@ services:
     restart: always
     container_name: inventory_db
     environment:
-      MYSQL_ROOT_PASSWORD: P@55w0rd2024
-      MYSQL_DATABASE: inventorydb
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3309:3306"
+      - "3308:3306"
     volumes:
       - db_data:/var/lib/mysql
  
 
   app:
-    image: inventory-lite
+    image: inventory-img
     container_name: inventory_app
     build:
       context: .
       dockerfile: Dockerfile
+    env_file: 
+    - .env
     ports:
       - "8085:8080"
     depends_on:
