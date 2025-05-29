@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Product</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Add Product</h1>
+      <nav>
+        <a href="/admin/products">Back to Products</a> |
+        <a href="/admin/logout">Logout</a>
+      </nav>
+    </header>
+    <form action="/admin/products/add" method="POST">
+      <label>Name:<br /><input type="text" name="name" required /></label
+      ><br /><br />
+      <label>Description:<br /><textarea name="description"></textarea></label
+      ><br /><br />
+      <label
+        >Category:<br />
+        <select name="category_id" required>
+          {{range .}}
+          <option value="{{.ID}}">{{.Name}}</option>
+          {{end}}
+        </select> </label
+      ><br /><br />
+      <button type="submit">Add Product</button>
+    </form>
+  </body>
+</html>

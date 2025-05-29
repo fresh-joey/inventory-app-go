@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Order History Page" />
+    <title>Place Order</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <h1>Place an Order</h1>
+
+    <form id="order-form">
+      <input placeholder="Customer Name" id="customer-name" required />
+
+      <div id="order-items">
+        <div class="order-item">
+          <label id="product-label-0" class="visually-hidden" for="product-id-0"
+            >Product</label
+          >
+          <select
+            class="product-id"
+            id="product-id-0"
+            required
+            aria-labelledby="product-label-0"
+          >
+            <option value="">Select product</option>
+          </select>
+          <input
+            type="number"
+            placeholder="Quantity"
+            class="product-qty"
+            min="1"
+            value="1"
+            required
+          />
+        </div>
+      </div>
+
+      <button type="button" id="add-item">+ Add Item</button>
+      <button type="submit">Place Order</button>
+    </form>
+
+    <script>
+      // Fetch products from server to populate the dropdown
+      async function fetchProducts() {
+        const res = await fetch("/admin/products");
+        const products = await res.json();
+
+        document.querySelectorAll(".product-id").forEach((select) => {
+          select.innerHTML = '<option value="">Select product</option>';
+          products.forEach((p) => {
+            const option = document.createElement("option");
+            option.value = p.ID;
+            option.textContent = p.Name;
+            select.appendChild(option);
+          });
+        });
+      }
+
+      // Add a new order item row when "+ Add Item" is clicked
+      document.getElementById("add-item").addEventListener("click", () => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "order-item";
+        const uniqueId =
+          "product-id-" + Date.now() + Math.floor(Math.random() * 1000);
+        itemDiv.innerHTML = `
+              <label id="label-${uniqueId}" class="visually-hidden" for="${uniqueId}">Product</label>
+              <select class="product-id" id="${uniqueId}" required aria-labelledby="label-${uniqueId}">
+                <option value="">Select product</option>
+              </select>
+              <input type="number" placeholder="Quantity" class="product-qty" min="1" value="1" required />
+              <button type="button" class="remove-item">Remove</button>
+            `;
+        document.getElementById("order-items").appendChild(itemDiv);
+        fetchProducts();
+
+        // Add remove functionality
+        itemDiv.querySelector(".remove-item").addEventListener("click", () => {
+          itemDiv.remove();
+        });
+      });
+
+      // On form submit, build JSON payload and send POST
+      document
+        .getElementById("order-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const customerName = document.getElementById("customer-name").value;
+          const itemsEls = document.querySelectorAll(".order-item");
+
+          const items = Array.from(itemsEls).map((item) => ({
+            product_id: parseInt(item.querySelector(".product-id").value),
+            quantity: parseInt(item.querySelector(".product-qty").value),
+          }));
+
+          if (
+            !customerName ||
+            items.some((i) => isNaN(i.product_id) || i.quantity < 1)
+          ) {
+            alert("Please fill out all fields correctly");
+            return;
+          }
+
+          const order = {
+            customer_name: customerName,
+            items: items,
+          };
+
+          const res = await fetch("/admin/orders", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(order),
+          });
+
+          if (res.ok) {
+            alert("Order placed successfully!");
+            window.location.href = "/admin/orders"; // Redirect to order list
+          } else {
+            const err = await res.json();
+            alert("Error placing order: " + (err.error || "Unknown error"));
+          }
+        });
+    </script>
+  </body>
+</html>

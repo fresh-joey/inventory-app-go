@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Categories</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Categories</h1>
+      <nav>
+        <a href="/admin/dashboard">Dashboard</a> |
+        <a href="/admin/categories/add">Add Category</a> |
+        <a href="/admin/logout">Logout</a>
+      </nav>
+    </header>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .}}
+        <tr>
+          <td>{{.ID}}</td>
+          <td>{{.Name}}</td>
+          <td>
+            <a
+              href="/admin/categories/delete/{{.ID}}"
+              onclick="return confirm('Delete this category?')"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        {{else}}
+        <tr>
+          <td colspan="3">No categories found</td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </body>
+</html>

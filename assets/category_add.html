@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Category</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Add Category</h1>
+      <nav>
+        <a href="/admin/categories">Back to Categories</a> |
+        <a href="/admin/logout">Logout</a>
+      </nav>
+    </header>
+    <form action="/admin/categories/add" method="POST">
+      <label>Name:<br /><input type="text" name="name" required /></label
+      ><br /><br />
+      <button type="submit">Add Category</button>
+    </form>
+  </body>
+</html>

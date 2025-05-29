@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Products</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <h1>Product List</h1>
+    <ul id="product-list"></ul>
+
+    <h2>Add Product</h2>
+    <form id="product-form">
+      <input placeholder="Name" id="name" required />
+      <input type="number" placeholder="Quantity" id="quantity" required />
+      <input type="number" placeholder="Price" id="price" required />
+      <input
+        type="number"
+        placeholder="Category ID"
+        id="category_id"
+        required
+      />
+      <button type="submit">Add Product</button>
+    </form>
+
+    <script>
+      async function fetchProducts() {
+        const res = await fetch("/products");
+        const products = await res.json();
+        const list = document.getElementById("product-list");
+        list.innerHTML = "";
+        products.forEach((p) => {
+          const li = document.createElement("li");
+          li.textContent = `${p.name} - Qty: ${p.quantity} - $${p.price}`;
+          list.appendChild(li);
+        });
+      }
+
+      document
+        .getElementById("product-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const product = {
+            name: document.getElementById("name").value,
+            quantity: parseInt(document.getElementById("quantity").value),
+            price: parseFloat(document.getElementById("price").value),
+            category_id: parseInt(document.getElementById("category_id").value),
+          };
+          await fetch("/products", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(product),
+          });
+          fetchProducts();
+        });
+
+      fetchProducts();
+    </script>
+  </body>
+</html>

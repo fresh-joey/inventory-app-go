@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Order History</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/assets/style.css" />
+  </head>
+  <body>
+    <h1>Order History</h1>
+    <div id="order-history"></div>
+
+    <script>
+      async function fetchOrders() {
+        const res = await fetch("/orders");
+        const orders = await res.json();
+        const container = document.getElementById("order-history");
+        container.innerHTML = "";
+
+        orders.forEach((order) => {
+          const div = document.createElement("div");
+          div.className = "order-entry";
+          div.innerHTML = `
+          <h3>Order #${order.ID} - ${order.customer_name}</h3>
+          <ul>
+            ${order.items
+              .map(
+                (item) =>
+                  `<li>Product ID: ${item.product_id} — Qty: ${item.quantity}</li>`
+              )
+              .join("")}
+          </ul>
+        `;
+          container.appendChild(div);
+        });
+      }
+
+      fetchOrders();
+    </script>
+  </body>
+</html>
