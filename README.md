@@ -1,1 +1,1 @@
-Inventory App written in Golang
+# Inventory App written in Golang
